@@ -1,0 +1,47 @@
+doctype html
+html
+  head
+    title Voting
+    script(src="//code.jquery.com/jquery-2.1.4.min.js")
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  body
+    h1 Was my presentation good?
+    hr
+    div(style={display: 'flex', 'flex-direction': 'column'})
+      <button id="yes" class="bubbly-button" style="width: 100%; height: 100px; border-radius: 4px; margin-bottom: 10px; font-size: 2em; background-color: #00FF7F">Yes</button>
+      <button id="no" class="bubbly-button" style="width: 100%; height: 100px; border-radius: 4px; font-size: 2em; background-color: #FA8072">No</button>
+  script.
+    function vote(yes) {
+      $.get("/vote?yes=" + yes)
+    }
+    
+    $("#yes").on("click", function() {
+      vote(true)
+    })
+
+    $("#no").on("click", function() {
+      vote(false)
+    })
+
+    if (!!window.EventSource) {
+      var source = new EventSource('/stream')
+
+      source.addEventListener('message', function(e) {
+        votes = JSON.parse(e.data)
+      }, false)
+
+      source.addEventListener('open', function(e) {
+        $("#state").text("Connected")
+      }, false)
+
+      source.addEventListener('error', function(e) {
+        if (e.target.readyState == EventSource.CLOSED) {
+          $("#state").text("Disconnected")
+        }
+        else if (e.target.readyState == EventSource.CONNECTING) {
+          $("#state").text("Connecting...")
+        }
+      }, false)
+    } else {
+      console.log("Your browser doesn't support SSE")
+    }

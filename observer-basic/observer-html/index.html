@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>OBSERVER HTML</title>
+  <style> 
+    .square {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      display: inline-block;
+      margin-right: 10px;
+      background-color: black;
+      color: white;
+      font-size: 2em;
+      font-family: sans-serif;
+    }
+  </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="square" id="observer1"></div>
+  <hr>
+  <button type="button" onclick="model.changeColor()">change color</button>
+  <script src="iterator.js" charset="utf-8"></script>
+  <script src="observer-html.js" charset="utf-8"></script>
+  <script src="element.js" charset="utf-8"></script>
+  <script src="console.js" charset="utf-8"></script>
+  <script>
+    const model = new Model()
+    const obs1 = new ElementObs('observer1');
+    const obs2 = new ConsoleObs();
+
+    model.addObserver(obs1);
+    model.addObserver(obs2);
+
+    // initial observers broadcast
+    model.notifyObservers();
+  </script>
+</body>
+</html>
